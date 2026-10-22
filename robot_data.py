@@ -5,10 +5,14 @@ import numpy as np
 
 
 # =============================================================================
-# Using <class>, I will store impt properties referenced from <ur5e.xml>, these will go on to be used in FK later
-# Refer to <python_prep> for my inputs on Classes and Objects
+# <class Robot> to store impt properties (ie. bodies) referenced from <ur5e.xml>, these will go on to be used in FK later
+# Refer to <python_prep> for inputs on Classes and Objects
 # =============================================================================
 class Robot:
+
+    # =============================================================================
+    # Body: to contain properties/parameters of main links of the arm (to be stored in self.body)
+    # =============================================================================
     class Body:
         # setup constructor for <class Body>; initialize it
         def __init__(self, parent, name, pos, quat, ipos, iquat, mass, inertia, joint_axis, joint_range):
@@ -23,14 +27,24 @@ class Robot:
             self.joint_axis = np.array(joint_axis)
             self.joint_range = np.array(joint_range)
 
-    # func to add body to robot
+    # func to add a body (creates a Robot.Body and files it under [body_id])
     def add_body(self, body_id, parent, name, pos, quat, mass, ipos, iquat, inertia, joint_axis, joint_range):
         self.body[body_id] = Robot.Body(parent, name, pos, quat, mass, ipos, iquat, inertia, joint_axis, joint_range)
 
-    # class to contain (1) base and (2) end-effector/attachment site; anything that isn't a body
+    # =============================================================================
+    # Misc: to contain properties/parameters of (1) base & (2) end-effector/attachment site (to be stored in self.misc)
+    # =============================================================================
     class Misc:
         # setup constructor for <class Misc>; initialize it
-        def __init__(self, ):
+        # def __init__(self, ):
+
+
+
+
+
+
+
+
 
     # setup constructor for <class Robot>
     def __init__(self):
@@ -161,6 +175,7 @@ robot.add_body(body_id = 6, parent='wrist_2_link', name='wrist_3_link', pos=[0,0
 
 
 # What's left that hasn't been added via robot.body() is base & site
+# To be redirected to Misc.
 # <!-- Joint 1 | Base -->
 # <body name="base" quat="0 0 0 -1" childclass="ur5e">
 #     <inertial mass="4.0" pos="0 0 0" diaginertia="0.00443333156 0.00443333156 0.0072"/>
