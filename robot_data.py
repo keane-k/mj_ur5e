@@ -7,7 +7,7 @@ import numpy as np
 # scale a quaternion (w,x,y,z) to have its length be exactly 1
 def quat_normalize(q):
     q = np.asarray(q) # 'convert' to np.array
-    assert q.shape[-1] == 4 # check if there's 4 components
+    assert q.shape[-1] == 4 # check if there's 4 components, if no, inject <AssertionError>
 
     norm = np.linalg.norm(q, axis = -1, keepdims=True)
     q_normalized = q / norm
@@ -38,6 +38,7 @@ class Robot:
             self.joint_range = np.array(joint_range)
 
     # func to add a body (creates a Robot.Body and files it under [body_id])
+    # to be called later
     def add_body(self, body_id, parent, name, pos, quat, mass, ipos, iquat, inertia, joint_axis, joint_range):
         self.body[body_id] = Robot.Body(parent, name, pos, quat, mass, ipos, iquat, inertia, joint_axis, joint_range)
 
@@ -57,21 +58,23 @@ class Robot:
         # we are to grab <quat> for base, <pos> for EE, <quat> for EE; work this first, add anything else after
         def __init__(self, base_quat, ee_pos, ee_quat):
             # self.base_quat = np.array(base_quat)
-            # self.ee_pos = np.array(ee_pos)
-            self.ee_quat = np.array(ee_quat)
+            self.ee_pos = np.array(ee_pos)
+            # self.ee_quat = np.array(ee_quat)
 
             self.base_quat = quat_normalize(np.array(base_quat))
             self.ee_quat = quat_normalize(np.array(ee_quat))
 
     # func to add misc (no id like [body_id] req. since there's only 1 base and 1 ee for UR5e)
+    # to be called later
     def add_misc(self, base_quat, ee_pos, ee_quat):
         self.misc = Robot.Misc(base_quat, ee_pos, ee_quat)
 
     
 
-    # setup constructor for <class Robot>
+    # setup constructor for <class Robot>, this class has 2 items (Body) & (Misc)
     def __init__(self):
-        self.body = {}
+        self.body = {} # empty until <add_body()> is called
+        self.misc = None # empty until <add_misc()> is called
 
 
 # call the class; create an <object> from this <class>
@@ -216,5 +219,16 @@ robot.add_body(body_id = 6, parent='wrist_2_link', name='wrist_3_link', pos=[0,0
                joint_axis=[0,1,0], joint_range=[-6.2831,6.2831])
 
 
+
+
+# =============================================================================
+# Compute <quat> norm for Bodies using quat_normalize() as defined above
+# <quat>
+# <iquat>
+# =============================================================================
+for body_id, body in robot.body.items():
+    print(body_id, body.name, body.quat, body.iquat)
+    body.quat = quat_normalize(body.quat)
+    body.iquat = quat_normalize(body.iquat)
 
 
