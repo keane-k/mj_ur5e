@@ -33,7 +33,8 @@ def axis_rotation(rotation_axis_id, angle):
     return rotation_matrix
 
 
-def quat_to_rotation(quat): # convert quaternion to rotation
+# convert quaternion to rotation
+def quat_to_rotation(quat): 
     # extract the individual q0, q1, q2, q3 from <quat>
     q0 = quat[0]
     q1 = quat[1]
@@ -41,8 +42,11 @@ def quat_to_rotation(quat): # convert quaternion to rotation
     q3 = quat[3]
 
     # compute quaternion rotation matrix; refer to <additional_notes.ipynb> for explanation
-    quat_rot_mat = np.array([[]])
+    quat_rot_mat = np.array([[q0**2 + q1**2 - q2**2 - q3**2, 2 * (q1 * q2 - q0 * q3), 2 * (q1 * q3 + q0 * q2)],
+                             [2 * (q1 * q2 + q0 * q3), q0**2 - q1**2 + q2**2 - q3**2, 2 * (q2 * q3 - q0 * q1)],
+                             [2 * (q1 * q3 - q0 * q2), 2 * (q2 * q3 + q0 * q1), q0**2 - q1**2 - q2**2 + q3**2]])
 
+    return quat_rot_mat
 
 def forward_kinematics(angles):
 
@@ -65,3 +69,7 @@ def forward_kinematics(angles):
 
         # attain the rotation matrix based on <rot_axis_id>, x, y or z rotation axis matrix
         rot_mat = axis_rotation(rot_axis_id, angle)
+
+
+        
+        
