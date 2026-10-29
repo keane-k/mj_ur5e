@@ -67,9 +67,18 @@ def forward_kinematics(angles):
         # assign individual angle from angles (user-input in func) for each joint
         angle = angles[i-1] # rmbr that while body_id starts from 1-6, python(index) starts from 0-5
 
-        # attain the rotation matrix based on <rot_axis_id>, x, y or z rotation axis matrix
+        # obtain the rotation matrix based on <rot_axis_id>, x, y or z rotation axis matrix; this would need to be combined with <quat> rotation later
         rot_mat = axis_rotation(rot_axis_id, angle)
 
-
+        # set up storage point in <robot.body[body_id]> that stores:
+        # obtain this link's (1) rotation and (2) position .wrt. its parent
+        # we know <quat> is referenced .wrt. parent; do rmbr that we need to `quat @ rot_mat` to get the actual rotation matrix
+        robot.body[i].rotation = quat_to_rotation(quat) @ rot_mat
+        # position is just <pos> from xml file
+        robot.body[i].position = robot.body[i].pos
         
         
+        # create the homogeneous transform matrix (w/ rot and trans(pos))
+        hom_transform = np.eye(4) # create a 4x4 identity (eye) matrix
+        hom_transform[:3,:3] = robot.body[i].rotation
+        hom_transform[:3,3] = robot.body[i].position.reshape(3)
