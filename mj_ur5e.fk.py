@@ -251,10 +251,10 @@ context = mj.MjrContext(model, mj.mjtFontScale.mjFONTSCALE_150.value) # sets up 
 # - lookat
 # =============================================================================
 # recall, we've addressed `cam = mj.MjvCamera()`
-# cam.azimuth = 90.0
-# cam.elevation = -89.0
-# cam.distance = 7.178388686350998
-# cam.lookat = np.array([ 0.0 , 0.0 , 0.0 ])
+cam.azimuth = 43.600000000000016
+cam.elevation = -38.399999999999935
+cam.distance = 1.168654889007786
+cam.lookat = np.array([ -0.13663405625141398 , 0.19978082742874825 , 0.4223891231448503 ])
 
 #initialize the controller
 init_controller(model,data)
@@ -310,12 +310,12 @@ while not glfw.window_should_close(window):
         # compute <quat> using MuJoCo's built-in features 
         # 1. create empty array to hold the resulting quaternion [w,x,y,z]
         mj_ee_quat = np.zeros(4, dtype=np.float64)
-        # 2. call MuJoCo util. func <mju_mat2Quat(ouput, input)>
+        # 2. call MuJoCo util. func <mju_mat2Quat(ouput; quat[4], input; mat[9])>
         mj.mju_mat2Quat(mj_ee_quat, mj_ee_rot)
 
-        print('mj_ee_pos:\n', mj_ee_pos)
-        print('mj_ee_rot:\n', mj_ee_rot)
-        print('mj_ee_quat:\n', mj_ee_quat)
+        # print('mj_ee_pos:\n', mj_ee_pos)
+        # print('mj_ee_rot:\n', mj_ee_rot)
+        # print('mj_ee_quat:\n', mj_ee_quat)
 
 
         ### Onwards is Python Computation (allows us to check between MuJoCo and Python) ###
@@ -334,9 +334,9 @@ while not glfw.window_should_close(window):
         # we have <rot> and <trans>, we need <quat> 
         py_ee_quat = rot_to_quat(py_ee_rot)
 
-        print('py_ee_pos:\n', py_ee_pos)
-        print('py_ee_rot:\n', py_ee_rot)
-        print('py_ee_quat:\n', py_ee_quat)
+        # print('py_ee_pos:\n', py_ee_pos)
+        # print('py_ee_rot:\n', py_ee_rot)
+        # print('py_ee_quat:\n', py_ee_quat)
 
         # compare values between <mj_> and <py_>; values match confirmed
 
