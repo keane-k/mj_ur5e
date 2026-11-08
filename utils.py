@@ -113,3 +113,27 @@ def rot_to_quat(rot):
         q2 = (rot[2, 1] + rot[1, 2]) / (4 * q3)
 
     return np.array([q0, q1, q2 ,q3])
+
+
+# compute <euler_to_rot>; input <euler> should be np.array([φ,θ,ψ])
+def euler_to_rot(euler):
+    phi = euler[0]
+    theta = euler[1]
+    psi = euler[2]
+
+    Rx_phi = axis_rotation(0, phi)
+    Ry_theta = axis_rotation(1, theta)
+    Rz_psi = axis_rotation(2, psi)
+
+    rot = Rx_phi @ Ry_theta @ Rz_psi
+
+    return rot
+
+
+# compute <euler_to_quat>; combi of <euler_to_rot> & <rot_to_quat>
+# input <euler> should be np.array([φ,θ,ψ])
+def euler_to_quat(euler):
+    rot = euler_to_rot(euler)
+    quat = rot_to_quat(rot)
+
+    return quat # <rot_to_quat> returns np.array([q0,q1,q2,3])
